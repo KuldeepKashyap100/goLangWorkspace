@@ -1,0 +1,96 @@
+1. Go: 
+    -> It is statically typed, compiled open source language programming language 
+    -> designed by google.
+    -> statically typed means value types are defined in advance (like we have to write variables types)
+    -> compiled means code is compiled to machine code ahead of execution
+    -> command: go run firstApp.go
+
+2. Use:
+    -> Go can be used to create all kinds of applications but it's especially
+    -> popular for building scalable web servers or systems in general
+    -> Go tries to combine the best of c++, java and python
+    -> Engineers at google wanted to take performance of c++ but easier syntax and faster compilation time
+    -> strict typing as in java and c++ for safety and unessary errors
+    -> They also wanted the simplicity of python but better performance than python in some bigger projects
+    -> They also wanted to a lot of built-in features so that go is ready to use without having to install a bunch of third-party libraries
+    -> But they also wanted the great third-party support
+    -> Go is awesome for web services and apps automation-scripts command line programs
+
+3. When not to use it:
+    -> Games, c++, unity is best for it.
+    -> desktop apps, mobile apps
+
+4. main():
+    -> main is special function which is executed by default when we execute a file.
+
+5. semicolon:
+    -> ; is optional if not added during the compilation go will add these for you.
+    -> convention is to omit them
+
+6. data types:
+    string: stores text, double quotes are reserved for strings. multiline strings in Go with the special ` (backtick) 
+    int: number without decimal places
+    float64: number with decimal places (more precise than float32 but takes more memory)
+    float32: number with decimal places but takes less memory
+    bool: stores boolean value
+    byte: smallest possible storage unit, stores single character or more specifically single ascii character 
+            internally any value in byte is stored as integer
+            use single quotes for any value 
+    rune: similar to byte but rune can store more characters. 
+            here we are limited to basic characters but we can also store emojis or anything like that
+            internally any value in rune is stored as integer
+            use single quotes for any value 
+    
+
+7. := operator 
+    -> you always declare and define the variable in one step ("declare" means that you introduce the variable, "define" means that you assign a value to it).
+
+8. var keyword
+    -> If you create variables with the var keyword instead, 
+    -> you can also declare + define in one step but you can also just declare the variable and define it at a later point of time
+    -> var userName = "Max" // declaring + defining in one step
+    -> var age int // declaring the variable
+    -> age = 32 // defining a value for the variable
+
+9. default variable value   
+    -> the variable has a default value as an initial value - the so-called "null value".
+    -> For int values, the default value is 0, for floats it's 0.0 and for string values (text), it's an empty string ("").
+
+10. fmt package (formatting package)
+    -> used for formatting and outputting strings
+    -> fmt.Print(str), fmt.Printf(format, str), fmt.Println(str) 
+    -> fmt.Printf("Hi My name is %v %v and my age is %v (Type: %T) years old", firstName, lastName, age, age)
+    -> format string and output formatted string to standard output
+    -> fmt.Srint(str), fmt.Srintf(format, str), fmt.Srintln(str) 
+    -> format string and return formatted string
+    -> fmt.Frint(str), fmt.Frintf(format, str), fmt.Frintln(str) 
+    -> format string and write to specified writer
+
+
+11. modules
+    -> every .go file you create needs to belong to a package. (that's why package main)
+    -> For bigger projects you might split up your projects into multiple packages 
+    -> Go code is organized into modules and packages
+    -> Modules are bigger than packages
+    -> a module has a unique identifier and can be distributed(e.g library)
+    -> every Go project goes into a new module
+    -> projects can use(i.e import from) multiple modules (custom or third party)
+    -> created and managed via go mod commands and go .mod file
+    -> command: go mod init github.com/yourOrg/firstApp
+    -> now to run command: go run . (it'll look for main package and main function)
+
+12. packages
+    -> every module contains atleast one package (the 'main' package)
+    -> multiple files can make up the same package (via package instruction)
+    ->  a module may contain multiple packages, stored in subfolders
+    -> can be imported
+
+13. variable naming
+    -> if you start the var name with lower case then it must be used in same package.
+    -> to be used in other packages it must be started with uppercase.
+
+14. 
+
+
+
+
