@@ -12,7 +12,8 @@
     -> Engineers at google wanted to take performance of c++ but easier syntax and faster compilation time
     -> strict typing as in java and c++ for safety and unessary errors
     -> They also wanted the simplicity of python but better performance than python in some bigger projects
-    -> They also wanted to a lot of built-in features so that go is ready to use without having to install a bunch of third-party libraries
+    -> They also wanted to a lot of built-in features,
+    -> so that Go is ready to use without having to install a bunch of third-party libraries
     -> But they also wanted the great third-party support
     -> Go is awesome for web services and apps automation-scripts command line programs
 
@@ -37,13 +38,14 @@
             internally any value in byte is stored as integer
             use single quotes for any value 
     rune: similar to byte but rune can store more characters. 
-            here we are limited to basic characters but we can also store emojis or anything like that
+            here we are not limited to basic characters but we can also store emojis or anything like that
             internally any value in rune is stored as integer
             use single quotes for any value 
     
 
 7. := operator 
-    -> you always declare and define the variable in one step ("declare" means that you introduce the variable, "define" means that you assign a value to it).
+    -> you always declare and define the variable in one step
+    -> ("declare" means that you introduce the variable, "define" means that you assign a value to it).
 
 8. var keyword
     -> If you create variables with the var keyword instead, 
@@ -75,22 +77,50 @@
     -> a module has a unique identifier and can be distributed(e.g library)
     -> every Go project goes into a new module
     -> projects can use(i.e import from) multiple modules (custom or third party)
-    -> created and managed via go mod commands and go .mod file
+    -> created and managed via Go mod commands and Go .mod file
     -> command: go mod init github.com/yourOrg/firstApp
     -> now to run command: go run . (it'll look for main package and main function)
 
 12. packages
     -> every module contains atleast one package (the 'main' package)
     -> multiple files can make up the same package (via package instruction)
-    ->  a module may contain multiple packages, stored in subfolders
+    -> a module may contain multiple packages, stored in subfolders
     -> can be imported
 
 13. variable naming
     -> if you start the var name with lower case then it must be used in same package.
     -> to be used in other packages it must be started with uppercase.
 
-14. 
+14. const keyword
+    -> to create constant variables
+    -> const PI = 3.14
+    -> function call cannot be assigned to const var
+    -> because function will run inorder to get the value.
+    -> but the const should be a value that's lockedIn before even app starts running
+
+15. Reader
+    -> To read data from the command prompt
+    -> var reader = bufio.NewReader(os.Stdin);
+    -> first create a reader instance
+    -> reader.ReadString('\n');
+    -> now this reader will capture the input whenever it encounters new line character 
+    -> and it will also include it in captured string 
 
 
+16. 'strings' library
+    -> if we want to remove that newline char
+    -> we can use 'strings' library
+    -> strings.Replace(weightInput, "\n", "", -1)
+    -> args[0] -> input which needs to be char replacement
+    -> args[1] -> what's need to be replaced
+    -> args[2] ->  with what
+    -> args[3] -> how many instances should be replaced (-1 to replace all)
+
+16. 'strconv' library
+    -> to convert string data type to another data type
+    -> usage: weight, _ := strconv.ParseFloat(weightInput, 32)
+
+17. To print float value upto certain number of decimal
+    usage: fmt.Printf("Your BMI: %.2f", bmi)
 
 
