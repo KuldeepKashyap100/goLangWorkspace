@@ -1,31 +1,19 @@
 package main
 
 import (
-	"fmt"
-	"strconv"
-	"strings"
-
 	"github.com/kuldeep/bmiCalculator/info"
 )
 
-
-
 func main() {
-	fmt.Println(info.MainTitle)
-	fmt.Println(info.Seperator)
-	fmt.Print(info.WeightPropmt)
-	weightInput, _ := reader.ReadString('\n');
-	fmt.Print(info.HeightPrompt)
-	heightInput, _ := reader.ReadString('\n');
+	info.PrintWelcome()
 
-	weightInput = strings.Replace(weightInput, "\n", "", -1)
-	heightInput = strings.Replace(heightInput, "\n", "", -1)
+	weight, height := getUserMetrics()
 
-	weight, _ := strconv.ParseFloat(weightInput, 32)
-	height, _ := strconv.ParseFloat(heightInput, 32)
+	bmi := calculateBMI(weight, height)
 
-	bmi := weight / (height * height)
+	printBMI(bmi)
+}
 
-	fmt.Printf("Your BMI: %.2f", bmi)
-
+func calculateBMI(weight float64, height float64) float64 {
+	return weight / (height * height)
 }
