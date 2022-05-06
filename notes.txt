@@ -121,6 +121,159 @@
     -> usage: weight, _ := strconv.ParseFloat(weightInput, 32)
 
 17. To print float value upto certain number of decimal
-    usage: fmt.Printf("Your BMI: %.2f", bmi)
+    -> usage: fmt.Printf("Your BMI: %.2f", bmi)
 
 
+18. Generate random number
+    -> import "math/rand"
+    -> rand.Intn(n int)
+    -> it will generate a random number b/w 0 and n, excluding n
+    -> learn more about it: https://gobyexample.com/random-numbers
+
+19. Functions
+    -> functions in Go can return more than one value
+    -> return num1, num2
+    -> we will also have to declare the return type, if we are returning multiple values
+    -> function getNumbers() (int, int) {}
+    -> using named return value
+    -> we can declare return var and use it inside the function
+    -> then we don't have to return the variable 
+    -> ex: function getNumbers() (a int, b int) {
+    ->    a = 5
+    ->    b = 10
+    ->    return
+    -> }
+    -> see we didn't used a:=10, because the var is already declared
+    -> and this function will automatically return two value a and b
+    -> we don't have to specify it
+    -> we should use this approach in short function
+    -> we use it long functions with lot of variables it will become very confusing
+    
+20. Pointers
+    -> Pointers are variables which does not store value but the memory address
+    -> where the actual value is stored.
+    -> Advantages
+    -> when passed to functions(as parameters) unnessary value copies can be avoided
+    -> function may directly work with / on an input value (e.g. change it)
+    -> ex: age := 45; 
+    ->     myAge := &age
+    ->     fmt.Printf("Address: %p, Actual Value: %v", myAge, *myAge)
+    -> getting the value using '*myAge' is called dereferencing
+    -> because we are diving into the address and getting that value
+    -> *myAge = 77 will override the actual value stored at age variable
+    -> ex: func doubleAge(age *int) int {
+	->         return *age * 2
+    ->     }
+
+21. struct
+    -> user defined data type
+    -> declaration: 
+    -> type User struct {
+            firstName   string
+            lastName    string
+            birthDate   string
+            createdDate time.Time
+        }
+    -> instantiation: 
+    -> newUser = User{
+            firstName:   firstName,
+            lastName:    lastName,
+            birthDate:   birthdate,
+            createdDate: created,
+	    }
+    -> if we keep the order same as declared in struct then we can instantiate like this
+    -> newUser = User{
+            firstName,
+            lastName,
+            birthdate,
+            created,
+        }
+    -> if we call a function witha all the arguments required by the struct 
+    -> and the function if creating the new object and returning it 
+    -> in this case 2 instances of struct will be created
+    -> first is the actual instance and other one is copy which is returned
+    -> the first will be removed relatively quickly by garbage collector
+    -> still if we have complex structs it can occupy lots of space
+    -> To avoid this we can use pointers
+    -> we can create object and return the pointer of it
+    -> if we pass pointer to struct to another function
+    -> we don't have to dereference it to access its properties
+    -> so instead of (*user).firstName we can use user.firstName(go will dereference it for you) directly
+    -> but both of them works
+    -> we can connect a struct and a function(i.e make function method of struct)
+    -> syntax: func (user User) outputDetails() {}
+    -> we have added special reciever argument here
+    -> and this reciever argument connects function to which type reciever argument is.
+
+22. os.Create(filePath)
+    -> is used to create file
+    -> and we can also write data to this newly created file
+    -> ex: file, _ := os.Create(prod.id+".txt")
+           file.WriteString(content)
+    
+23. arrays
+    -> declartion: [size]dataType{items}
+    -> [4]float64{1.0, 2.99, 3.99, 4.0} or var prices [4]float64; prices = [4]float64{1.0, 2.99}
+
+24. array slice method
+    -> prices[1:3] will have elements from idx 1 to excluding 3
+    -> prices[:3] will have elements from idx 0 to excluding 3
+    -> prices[1:] will have all the elements starting idx 1
+    -> if we create a new array by using slice on an array
+    -> and override the values in the new array
+    -> values in the original array will also gets modified
+    -> so on slice a new array is not getting created but we are storing the just the references of part of the array
+    -> ex: prices := [4]float64{1.0, 2.99, 3.99, 4.0}
+           featuredPrices := prices[1:3]
+           featuredPrices[0] = 199.99
+           fmt.Println(prices) -> {1.0, 199.99, 3.99, 4.0}
+
+25. len() inbuilt go function
+    -> gives the number of elements in an array
+    -> ex: len(prices)
+
+26. cap() inbuilt go function
+    -> gives the capacity of the array
+    -> ex:  prices := [4]float64{1.0, 2.99, 3.99, 4.0}
+	        featuredPrices := prices[1:]
+	        highlightedPrices := featuredPrices[:1]
+	        fmt.Println(len(highlightedPrices), cap(highlightedPrices)) -> 1 3
+            highlightedPrices = highlightedPrices[:3]
+            fmt.Println(highlightedPrices, len(highlightedPrices), cap(highlightedPrices)) -> [199.99 3.99 4] 3 3
+    -> highlightedPrices are based on featuredPrices which in turn based on the prices
+    -> so they share the same array under the hood 
+    -> highlightedPrices only have one element because it starts at idx 1 and ends at idx 1
+    -> but we have a heigher capacity
+    -> because the original array on which highlightedPrices is based have more elements to its right
+    -> for highlightedPrices we selected only one element(i.e [:1]) but theoratically we could select more elements
+    -> and that's why we have the overall capacity of 3
+    -> why not 4? since the original array has 4 elements
+    -> because when we use slice we can select more towards the end of the array but not towards the start.
+    -> we can also reslice and takes more elements from the right
+
+27. Dynamic Lists With Slices
+    -> we can create a dynamic slice by omitting the length: prices := []float64{1.99, 2.99}
+    -> by creating a array like this go will automatically create a slice for you
+    -> and since the slice is always based on an array
+    -> it will also create an array for you behind the scenes
+    -> but it will automatically ditch that array and create a new array if your slice grows beyond the bounds
+    -> To append an element into the array: updatedPrices := append(prices, 5.33)
+    -> but it will also return a brand new slice
+    -> so it does not add it to the original slice but what append does is tells go that
+    -> we want to add an item to the slice and therefore also to the underlying array
+    -> and ofcourse an array has fixed length so what go will do in this case
+    -> is it will create a brand new array and add that element into that brand new array
+    -> which is created such that it has the capacity of that new array
+    -> fmt.Println(updatedPrices, prices) -> [1.99 2.99 5.33] [1.99 2.99]
+    -> to delete an element there is no inbuild function
+    -> but we can use prices = prices[1:] to delete the first element
+    -> append can take inifite number of arguments: append(prices, 5.99, 6.99, 7.99, 8.99)
+
+28. unpacking list values
+    -> syntax: discountPrices := []float64{101.99, 80.99, 100.10}
+               prices := append(prices, discountPrices...) 
+    -> ... pulls out all the elements in the array and use them as seperate elements
+
+29. maps
+    -> syntax: websites := map[string]string{"google": "https://google.com"}
+    -> delete a key value pair: delete(websites, "google")

@@ -1,0 +1,4 @@
+Id: carpet-product
+Title: carpet
+Description: a beautiful carpet
+Price: 33.55
