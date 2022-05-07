@@ -277,3 +277,18 @@
 29. maps
     -> syntax: websites := map[string]string{"google": "https://google.com"}
     -> delete a key value pair: delete(websites, "google")
+
+control structures
+
+30. for loop
+    -> syntax: for i := chosenNumber; i >= 1; i-- {}
+    -> To iterate over an array: for idx, value := range inputNumbers {}
+
+31. there is no while loop in go
+    -> for isEnteringNumbers == true {}
+
+32. split func
+    -> strings.split(inputStr, ",")
+    -> it returns a slice of string
+
+33. 
