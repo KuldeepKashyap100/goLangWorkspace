@@ -291,4 +291,143 @@ control structures
     -> strings.split(inputStr, ",")
     -> it returns a slice of string
 
-33. 
+33. To generated actual random number:
+    -> ex- var randSource = rand.NewSource(time.Now().UnixNano())
+           var randGenerator = rand.New(randSource)
+           randGenerator.Intn(max - min + min)
+
+34. To install a third party package:
+    -> syntax: go get github.com/common-nighthawk/go-figure
+    -> or you can import it in your files and then install it
+    -> import("github.com/common-nighthawk/go-figure")
+    -> and now run: go mod tidy
+
+35: To build go projects so that they can run on machines where go is not installed.
+    -> syntax: go build
+    -> it will generate a single executable file
+
+36. os.Executable()
+    -> If we are generating some log file that won't be written in case of single executable file
+    -> To fix this we can take help from "exPath, err := os.Executable()" method
+    -> it will return the path to the executable file including the file name
+    -> To drop the file name we can use another package "filepath"
+    -> ex: exPath = filepath.Dir(exPath)
+           file, err := os.Create(exPath + "/gamelog.txt")
+
+37. Variable scoping
+    -> variables are scoped to the block in which they are created and a block is marked by curly braces
+    -> shadowing: variables declared in lower scope can shadow the variables declared heigher scope
+    -> ex: functional vars can shadow global vars
+
+38. make function
+    -> we can create a slice something like this: hobbies := []string{"Sports", "Reading"}
+    -> Here we can use 'append' to add more elements: hobbies = append(hobbies, "Cooking", "Dancing")
+    -> when we create a slice like this what happens behind the scene is go creates an array
+    -> and this array will have 2 values and when we use 'append', Go behind the scene creates
+    -> a new array with more capacity and it will add new values together with the existing values
+    -> and append will return the pointer this new array
+    -> This isn't neccessarily a problem
+    -> But if you have a slice where you know that you will add more values
+    -> then Go gives you a way of creating that slice in a more efficient way
+    -> where when you call append the next time Go doesn't neccessarily have to create a new array behind the scenes
+    -> That's where 'make' function comes into play
+    -> make allows you create a slice, a map or a channel
+    -> and allows you to define in advance, how many empty slots should be created behind the scenes?
+    -> syntax: hobbies := make([]string, 2, 10)
+    -> first argument: type of slice, 
+    -> second argument: we plan on having 2 elements, right from the start.
+    -> third argument: it should reserve space for 10 items overall
+    -> so now until we go above the 10 items, Go does not have to create a new array behind the scenes
+
+39. Composite literal way
+    -> syntax: hobbies := []string{"Cooking", "Dancing"}
+    -> this way is called composite literal way of creating a slice.
+
+40. new function
+    -> new just allocates memory for a value and then creates a zero version of the value
+    -> syntax: moreHobbies := new([]string)
+               fmt.Println(*moreHobbies)
+               *moreHobbies = make(*moreHobbies, "Cooking")
+    -> new will return the pointer to that created value
+    -> because its about only allocating memory, hence it gives you the address of that memory that was allocated.
+    -> why do we have new?
+    -> very niche situations or historic reasons
+    -> new was there in go before make was added
+    -> actual use new: to allocate space and create pointer for primitve types
+    -> ex: number := new(int)
+
+
+41. Custom Types
+    -> type keyword: it's not used only with structs but also to create custom types
+    -> ex: var people map[string]Person = map[string]Person{
+                "P1": {"Max", 32},
+            }
+    -> here type is too long, we can create our own custom type in these situations
+    -> ex: type PersonData map[string]Person
+            var shorterPeople PersonData = PersonData{
+                "P1": {"kuldeep", 27},
+            }
+    -> Another scenario where custom types could be useful
+    -> we cannot make any function method of any inbuilt types
+    -> ex: func (number int) pow() {
+                return number * 2
+            }
+    -> this code won't work, we won't be able to attach pow function to int data type
+    -> but what we can do is we can create our own custom type which will be based on int 
+    -> and attach this pow function to that custom type
+    -> ex: type customNumber int
+
+            func (number customNumber) pow() customNumber {
+                return number * 2
+            }
+
+            var dummyNumber customNumber = 5
+            // or  dummyNumber := customNumber(5)
+            fmt.Println(dummyNumber.pow(3))
+
+42. Note realated to custom types:
+    -> There also is another important aspect, you should be aware of:
+    -> When working with custom types and adding your own methods to them, 
+    -> you can end up in infinite loops, if you're not careful.
+    -> ex: type CustomString string
+
+            func (str CustomString) String() string {
+                return fmt.Sprintf("My text: %s", str) // Causes an infinite loop!
+            }
+    -> %s forces a conversion of the value to a string. 
+    -> This is achieved by calling the built-in String() method 
+    -> which exists the built-in string type. Our own custom type, 
+    -> CustomString, also has this method as we're adding it to it in the above code snippet.
+    -> Hence that method will be picked by Go, 
+    -> when you use %s and you use a value that is of your own type as a value for this placeholder 
+    -> - that's what's happening in the above snippet.
+    -> Therefore String() will be executed on str and 
+    -> that will in turn run that code in the above snippet again - and again, and again.
+    -> You can work around this by explicitly converting the value 
+    -> which is of your own custom type to the default string type as shown in this snippet:
+    -> ex: type CustomString string
+            
+            func (str CustomString) String() string {
+                return fmt.Sprintf("My text: %s", string(str)) // string() converts CustomString to string
+            }
+
+
+43. Const variables
+    -> const variables gets locked in when the code is compiled and not when run
+    -> therefore function calls are not allowed
+    -> we can define multiple const in one go
+    -> syntax: const (
+                    inputAttack = 1
+                    inputSpecialAttack = 2
+                    inputHeal = 3
+                )
+    -> when we have an incrementing list of numbers like above
+    -> Go has a shortcout for this situation, instead of setting 1, 2, 3 manually
+    -> you can set first value to 'iota'
+    -> syntax const (
+                    inputAttack = iota
+                    inputSpecialAttack
+                    inputHeal
+                )
+    -> now iota assume starting value as 0 and then next 1, 2..
+    -> if you don't want to start at 0, you can simply use 'iota + 1' for first value
