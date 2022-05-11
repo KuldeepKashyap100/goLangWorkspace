@@ -431,3 +431,192 @@ control structures
                 )
     -> now iota assume starting value as 0 and then next 1, 2..
     -> if you don't want to start at 0, you can simply use 'iota + 1' for first value
+
+44. functions
+    -> functions are first class citizens in Go
+    -> They can be passed as parameters to other functions 
+    -> also can be returned as a value from another function
+    -> snippet: numbers := []int{1, 2, 3, 4, 5}
+                doubled := transformNumbers(&numbers, double)
+                tripled := transformNumbers(&numbers, triple)
+
+45. anonmyous Functions
+    -> when we have a case where a function wants another function as a parameter
+    -> or where function returns a function
+    -> then we can save some effort and time by using anonmyous function
+    -> which allows you to define a function just in time, when you need it instead of in advance
+    -> snippet: tripled := transformNumbers(&numbers, func(number int) int {
+                    return number * 3
+                })
+
+46. closure
+    -> snippet: func createTransformer(factor int) func(int) int {
+                    return func(number int) int {
+                        return number * factor
+                    }
+                }
+    -> every anonmyous function is a closure and simply means that
+    -> is when you use a variable from a scope in which the function is created
+    -> then the value of that outer scope variable is locked into this created function
+
+47. Variadic Functions(Restructre operator for functions in JS)
+    -> snippet: func sumUp(numbers ...int) {
+                    sum:=0
+                    for _,num := range numbers {
+                        sum+=num
+                    }
+                    return sum
+                }
+    -> we can also recieve multiple arguments
+    -> func sumUp(firstNum int, numbers ...int) {}
+
+48. Splitting Slices Into Parameter Lists
+    -> if we have a slice and we want to call variadic function
+    -> we can do that, its similar to destructure operator in JS
+    -> snippet: numbers:= []int{1, 2, 4}
+                sumUp(6, numbers...)
+
+49. defer keyword
+    -> defer will defer the execution of some line of code until the execution of all the statements in the Functions
+    -> snippet: func storeData(data) {
+                    file, err := os.Create("data.txt")
+                    defer file.Close() // this statement will be executed at the end of function
+                    // do some operations or write data into the file
+                }
+    -> one disadvantage to this apprach is that you can accept some return value
+    -> one workaround is using the anonmyous function
+    -> snippet: defer func() {
+                    err := file.Close()
+                    // handle error
+                }()
+
+50. panic function
+    -> Go does not have try/catch or throw to handle error
+    -> instead Go uses multiple return value approach to return err along with value
+    -> ex: file, err := os.Create("data.txt")
+    -> but sometimes errors are so severe that we don't to continue further execution
+    -> in the above example if the file is not created we don't want to do anything 
+    -> ofcourse we can try recreating the file or log and return from the function
+    -> you can also use special function that is built-in Go "panic" function
+    -> the "panic" function allows you to generate an error that in the end will crash your program
+    -> you can technically still recover from it but it is typically meant to cause an error
+    -> that crashes your program because you are not able to handle an error appropriately
+    -> or because you want the program to crash
+    -> you should use this function with caution, and it should not be your default error handling mechanism
+    -> only use it if you are in a state from which you can't really recover anyways
+
+51. interfaces
+    -> interfaces are like contracts, you sign a contract then you'll have to follow the rules
+    -> implied by that contract. You have to fulfill that contract
+    -> interfaces are contracts in you code with which you can enforce certain behaviours, certain functionalites
+    -> checkout "interfaces" dir for example
+    -> snippet: type logger interface {
+                    log()
+                    printMessage(message string) int
+                }
+    -> interfaces are there to only define methods
+    -> you can't add fields in there
+    -> Go interfaces are only about methods
+    -> There is one convention in naming the interfaces
+    -> if the interface has only one method then interface name can be methodName+"er"
+    -> ex: if there is only one method "Read" then interface name is "Reader"
+    -> in Go we don't actively implement in interface like in other languages(like class Reader implements ReadInterface{})
+
+52. empty interface
+    -> we should use it when we want to accept any kind of value
+    -> because we on the fly create a new interface definition that basically does not define anything
+    -> it is basically take all data type
+    -> it should be helpful when we want to write very generic functions
+    -> for ex in below snippet func outputValue should accept all values int, bool, float...
+    -> snippet: function outputValue(value interface{}) {
+                    fmt.Println(value)
+                }
+
+53. Type Assertion
+    -> it is used to check if a value is of a certain dataType
+    -> for ex if we use empty interface, we are not sure what kind of dataType we will recieve
+    -> but using type assertion we can check data type at run time.
+    -> snippet: func outputValue(value interface{}) {
+                    val, ok := value.(string)
+                    fmt.Println(val, ok)
+                }
+    -> To get the type of a value: valType := value.(type)
+
+54. Type switches
+    -> A type switch is a construct that permits several type assertions in series.
+    -> A type switch is like a regular switch statement, 
+    -> but the cases in a type switch specify types (not values), 
+    -> and those values are compared against the type of the value held by the given interface value.
+    -> The declaration in a type switch has the same syntax as a type assertion i.(T), 
+    -> but the specific type T is replaced with the keyword type.
+    -> snippet: switch v := i.(type) {
+                case T:
+                    // here v has type T
+                case S:
+                    // here v has type S
+                default:
+                    // no match; here v has the same type as i
+                }
+    -> This switch statement tests whether the interface value i holds a value of type T or S.
+    -> In each of the T and S cases, the variable v will be of type T or S respectively 
+    -> and hold the value held by i. In the default case (where there is no match), 
+    -> the variable v is of the same interface type and value as i.
+    -> snippet: func double(value interface{}) interface{} {
+                    switch val := value.(type) {
+                    case int:
+                        return val * 2
+                    case float64:
+                        return val * 2
+                    case []int: 
+                        return append(val, val...)
+                    default:
+                        return ""
+                    }
+                }
+
+55. Embedding Interfaces
+    -> embedding means that you build a new interface or struct 
+    -> by merging multiple existing ones into a new one.
+    -> snippet: type Storer interface {
+                    Store(fileName string)
+                }
+
+                type Prompter interface {
+                    PromptForInput()
+                }
+                // combined interface of above 2 interfaces(embedding)
+                type PromtStorer interface {
+                    Storer
+                    Prompter
+                }
+    -> when we want to define an argument of function which should have both
+    -> the capabilities storing and propmting, we have created a new interface
+    -> by embedding the 2 already existing interfaces
+
+56. Embedding structs
+    -> snippet: type userInputData struct {
+                    input string
+                }
+
+                type user struct {
+                    firstName string
+                    lastName  string
+                    // embedding another struct
+                    *userInputData
+                }
+
+                func newUser(firstName string, lastName string) *user {
+                    return &user{firstName: firstName, lastName: lastName, userInputData: &userInputData{}}
+                }
+
+                func main() {
+                    user := newUser("kuldeep", "kashyap")
+                    user.PromptForInput()
+                    user.Store("test.txt")
+                }
+
+    -> see we can call the methods of embedded structs on our main struct itself
+    -> if the main struct and embedded struct have the same properties or methods
+    -> then priority will be given to main struct's methods and properties
+
+57. 
