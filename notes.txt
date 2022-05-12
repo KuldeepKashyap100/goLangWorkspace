@@ -619,4 +619,126 @@ control structures
     -> if the main struct and embedded struct have the same properties or methods
     -> then priority will be given to main struct's methods and properties
 
-57. 
+57. concurrency
+    -> execution in parallel
+    -> Go gives us syntax to start 2 functions at the same time
+    -> and these functions are called Goroutines
+    -> go does not wait for the first task to complete before it starts second task
+    -> snippet: go storeMoreData(50000, "5000_1.txt")
+	            go storeMoreData(50000, "5000_2.txt")
+	-> appending go in front of function call make it goroutine 
+    -> and now Go will not wait until the first function execution is done
+    -> instead it starts executing the statement after this line
+
+58. channels
+    -> channel is feature built-in to go that helps us with communication and data-management
+    -> when working with concurrent code and therefore when working with go routines
+    -> snippet: channel := make(chan int)
+                channel <- 1
+    -> with the 'chan' keyword we tell 'make' and therefore go to create a channel
+    -> then it's important to understand that channels are able to store values 
+    -> chan int means that we want to create a channel which will store int
+    -> '<-' built-in go operator which points at a channel
+    -> and notes the value that should be sent to the channel
+    -> and the direction of this arrow shows us the direction of the data flow.
+    -> in this case we are sending a number into our channel
+    -> snippet: <- channel
+                <- channel
+    -> if you read data from the channel Go will wait until data has been read.
+    -> it means if in the your goroutines you do send data into a channel
+    -> you effectively wait for those goroutines to finish
+    -> as soon as we start listening to channels. Go will register this
+    -> and it understands that we read one value once and then another value a second time
+    -> as soon as first goroutine is done the first read from the channel will be done
+    -> but the second read is still waiting for the value
+    
+59. Transmitting Values Via Channels
+    -> snippet: func main() {
+                    channel := make(chan int)
+
+                    go generateValue(channel)
+                    go generateValue(channel)
+                    go generateValue(channel)
+                    go generateValue(channel)
+
+                    // x := <- channel
+                    // y := <- channel
+
+                    // sum := x + y
+
+                    sum := 0
+                    i := 0
+                    for num := range channel {
+                        sum += num
+                        i++
+                        if i == 4 {
+                            close(channel)
+                        }
+                    }
+
+                    fmt.Println(sum)
+                }
+
+                func generateValue(channel chan int) int {
+                    sleepTime := randN.Intn(3)
+                    time.Sleep(time.Duration(sleepTime) * time.Second)
+
+                    result := randN.Intn(10)
+                    channel <- result
+
+                    return result
+                }
+
+60. Buffered Channels
+    -> when we want to perform multiple operations simultaneously
+    -> and we want to throttle these operations. we can do it using buffered channels
+    -> snippet: make(chan int, 3)
+    -> second argument in make for channel creation is buffer size default value is 0 means unbuffered
+    -> so now with buffer size set to 3, you can write 3 values into this channel and as soon as
+    -> you try to write a fourth value into it, Go will block the code execution, it will pause the program
+    -> and not continue with the code execution until a space is empty again
+    -> so until at least one value was read from the channel
+    -> snippet: func main() {
+                    channel := make(chan int)
+                    limiter := make(chan int, 3)
+
+                    go generateValue(channel, limiter)
+                    go generateValue(channel, limiter)
+                    go generateValue(channel, limiter)
+                    go generateValue(channel, limiter)
+                }
+
+                func generateValue(channel chan int, limiter chan int) {
+                    // as max size of this channel is 3 Go will pause the execution if it reaches its limit
+                    limiter <- 1
+                    fmt.Println("Generating value...")
+
+                    time.Sleep(time.Duration(4) * time.Second)
+
+                    channel <- randN.Intn(10)
+
+                    // free up the buffered channel so that the paused task can continue
+                    <-limiter
+                }
+
+61. The "select" Statement
+    -> its like a switch statement but for channels
+    -> suppose we want to fetch data it may be from DB or cache whichever is faster(Promise.race)
+    -> snippet: func main() {
+                    x := make(chan int)
+                    y := make(chan int)
+
+                    go generateValue(x)
+                    go generateValue(y)
+
+                    var a int
+                    var b int
+
+                    select {
+                        case a <- x:
+                            fmt.Println("X is finished first, value is %v", a)
+                        case b <- x:
+                            fmt.Println("Y is finished first, value is %v", b)
+                    }
+
+                }
