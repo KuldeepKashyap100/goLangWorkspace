@@ -63,9 +63,9 @@
     -> fmt.Print(str), fmt.Printf(format, str), fmt.Println(str) 
     -> fmt.Printf("Hi My name is %v %v and my age is %v (Type: %T) years old", firstName, lastName, age, age)
     -> format string and output formatted string to standard output
-    -> fmt.Srint(str), fmt.Srintf(format, str), fmt.Srintln(str) 
+    -> fmt.Sprint(str), fmt.Sprintf(format, str), fmt.Sprintln(str) 
     -> format string and return formatted string
-    -> fmt.Frint(str), fmt.Frintf(format, str), fmt.Frintln(str) 
+    -> fmt.Fprint(str), fmt.Fprintf(format, str), fmt.Fprintln(str) 
     -> format string and write to specified writer
 
 
