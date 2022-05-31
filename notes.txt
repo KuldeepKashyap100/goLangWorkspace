@@ -12,7 +12,7 @@
     -> Engineers at google wanted to take performance of c++ but easier syntax and faster compilation time
     -> strict typing as in java and c++ for safety and unessary errors
     -> They also wanted the simplicity of python but better performance than python in some bigger projects
-    -> They also wanted to a lot of built-in features,
+    -> They also wanted a lot of built-in features,
     -> so that Go is ready to use without having to install a bunch of third-party libraries
     -> But they also wanted the great third-party support
     -> Go is awesome for web services and apps automation-scripts command line programs
@@ -32,14 +32,14 @@
     string: stores text, double quotes are reserved for strings. multiline strings in Go with the special ` (backtick) 
     int: number without decimal places
     float64: number with decimal places (more precise than float32 but takes more memory)
-    float32: number with decimal places but takes less memory
+    float32: number with decimal places takes less memory
     bool: stores boolean value
     byte: smallest possible storage unit, stores single character or more specifically single ascii character 
-            internally any value in byte is stored as integer
+            internally any value in byte is stored as integer(uint)
             use single quotes for any value 
     rune: similar to byte but rune can store more characters. 
             here we are not limited to basic characters but we can also store emojis or anything like that
-            internally any value in rune is stored as integer
+            internally any value in rune is stored as integer(int32)
             use single quotes for any value 
     
 
@@ -65,7 +65,7 @@
     -> format string and output formatted string to standard output
     -> fmt.Sprint(str), fmt.Sprintf(format, str), fmt.Sprintln(str) 
     -> format string and return formatted string
-    -> fmt.Fprint(str), fmt.Fprintf(format, str), fmt.Fprintln(str) 
+    -> fmt.Fprint(w, str), fmt.Fprintf(w, format, str), fmt.Fprintln(w, str) 
     -> format string and write to specified writer
 
 
@@ -88,8 +88,8 @@
     -> can be imported
 
 13. variable naming
-    -> if you start the var name with lower case then it must be used in same package.
-    -> to be used in other packages it must be started with uppercase.
+    -> if you start the var name with lower case then it must be used in same package.(private)
+    -> to be used in other packages it must be started with uppercase.(public)
 
 14. const keyword
     -> to create constant variables
@@ -104,7 +104,7 @@
     -> first create a reader instance
     -> reader.ReadString('\n');
     -> now this reader will capture the input whenever it encounters new line character 
-    -> and it will also include it in captured string 
+    -> and it will also include '\n' in captured string 
 
 
 16. 'strings' library
@@ -147,7 +147,7 @@
     -> and this function will automatically return two value a and b
     -> we don't have to specify it
     -> we should use this approach in short function
-    -> we use it long functions with lot of variables it will become very confusing
+    -> if we use it in long functions with lot of variables it will become very confusing
     
 20. Pointers
     -> Pointers are variables which does not store value but the memory address
@@ -188,7 +188,7 @@
             birthdate,
             created,
         }
-    -> if we call a function witha all the arguments required by the struct 
+    -> if we call a function with all the arguments required by the struct 
     -> and the function if creating the new object and returning it 
     -> in this case 2 instances of struct will be created
     -> first is the actual instance and other one is copy which is returned
@@ -742,3 +742,7 @@ control structures
                     }
 
                 }
+
+62. To get test coverage
+    -> command: go test -cover
+    -> command: go test -coverageprofile=coverage.out && go tool cover -html=coverage.out 
