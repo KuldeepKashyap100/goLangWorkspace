@@ -54,5 +54,5 @@ func GetHealthAmounts() (int, int) {
 }
 
 func generateRandBetween(min int, max int) int {
-	return randGenerator.Intn(max - min + min)
+	return randGenerator.Intn(max-min) + min
 }

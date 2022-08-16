@@ -1,5 +1,5 @@
 1. Go: 
-    -> It is statically typed, compiled open source language programming language 
+    -> It is statically typed, compiled open source programming language 
     -> designed by google.
     -> statically typed means value types are defined in advance (like we have to write variables types)
     -> compiled means code is compiled to machine code ahead of execution
@@ -229,7 +229,7 @@
            fmt.Println(prices) -> {1.0, 199.99, 3.99, 4.0}
 
 25. len() inbuilt go function
-    -> gives the number of elements in an array
+    -> gives the number of elements in an slice
     -> ex: len(prices)
 
 26. cap() inbuilt go function
@@ -243,8 +243,8 @@
     -> highlightedPrices are based on featuredPrices which in turn based on the prices
     -> so they share the same array under the hood 
     -> highlightedPrices only have one element because it starts at idx 1 and ends at idx 1
-    -> but we have a heigher capacity
-    -> because the original array on which highlightedPrices is based have more elements to its right
+    -> but it has a heigher capacity
+    -> because the original slice on which highlightedPrices is based have more elements to its right
     -> for highlightedPrices we selected only one element(i.e [:1]) but theoratically we could select more elements
     -> and that's why we have the overall capacity of 3
     -> why not 4? since the original array has 4 elements
@@ -253,15 +253,15 @@
 
 27. Dynamic Lists With Slices
     -> we can create a dynamic slice by omitting the length: prices := []float64{1.99, 2.99}
-    -> by creating a array like this go will automatically create a slice for you
+    -> by creating an array like this Go will automatically create a slice for you
     -> and since the slice is always based on an array
     -> it will also create an array for you behind the scenes
     -> but it will automatically ditch that array and create a new array if your slice grows beyond the bounds
     -> To append an element into the array: updatedPrices := append(prices, 5.33)
     -> but it will also return a brand new slice
-    -> so it does not add it to the original slice but what append does is tells go that
-    -> we want to add an item to the slice and therefore also to the underlying array
-    -> and ofcourse an array has fixed length so what go will do in this case
+    -> so it does not add it to the original slice but what append does is tells Go that
+    -> we want to add an item to be added to the slice and therefore also to the underlying array
+    -> and ofcourse an array has fixed length so what Go will do in this case
     -> is it will create a brand new array and add that element into that brand new array
     -> which is created such that it has the capacity of that new array
     -> fmt.Println(updatedPrices, prices) -> [1.99 2.99 5.33] [1.99 2.99]
@@ -294,7 +294,7 @@ control structures
 33. To generated actual random number:
     -> ex- var randSource = rand.NewSource(time.Now().UnixNano())
            var randGenerator = rand.New(randSource)
-           randGenerator.Intn(max - min + min)
+           randGenerator.Intn(max - min) + min
 
 34. To install a third party package:
     -> syntax: go get github.com/common-nighthawk/go-figure
@@ -331,7 +331,7 @@ control structures
     -> then Go gives you a way of creating that slice in a more efficient way
     -> where when you call append the next time Go doesn't neccessarily have to create a new array behind the scenes
     -> That's where 'make' function comes into play
-    -> make allows you create a slice, a map or a channel
+    -> make allows you create a slice, a map and a channel
     -> and allows you to define in advance, how many empty slots should be created behind the scenes?
     -> syntax: hobbies := make([]string, 2, 10)
     -> first argument: type of slice, 
@@ -368,7 +368,7 @@ control structures
                 "P1": {"kuldeep", 27},
             }
     -> Another scenario where custom types could be useful
-    -> we cannot make any function method of any inbuilt types
+    -> we cannot make any function method of any premitive type
     -> ex: func (number int) pow() {
                 return number * 2
             }
@@ -483,8 +483,9 @@ control structures
                     defer file.Close() // this statement will be executed at the end of function
                     // do some operations or write data into the file
                 }
-    -> one disadvantage to this apprach is that you can accept some return value
-    -> one workaround is using the anonmyous function
+    -> one disadvantage to this approach is that you cannot accept some return value 
+    -> if you are deferring a function call
+    -> one workaround is using the anonymous function
     -> snippet: defer func() {
                     err := file.Close()
                     // handle error
@@ -496,23 +497,28 @@ control structures
     -> ex: file, err := os.Create("data.txt")
     -> but sometimes errors are so severe that we don't to continue further execution
     -> in the above example if the file is not created we don't want to do anything 
-    -> ofcourse we can try recreating the file or log and return from the function
-    -> you can also use special function that is built-in Go "panic" function
+    -> of course we can try recreating the file or log and return from the function
+    -> but you can also use special function that is built-in Go "panic" function
     -> the "panic" function allows you to generate an error that in the end will crash your program
     -> you can technically still recover from it but it is typically meant to cause an error
     -> that crashes your program because you are not able to handle an error appropriately
     -> or because you want the program to crash
     -> you should use this function with caution, and it should not be your default error handling mechanism
     -> only use it if you are in a state from which you can't really recover anyways
+    -> ex: panic(err)
 
 51. interfaces
     -> interfaces are like contracts, you sign a contract then you'll have to follow the rules
     -> implied by that contract. You have to fulfill that contract
-    -> interfaces are contracts in you code with which you can enforce certain behaviours, certain functionalites
+    -> interfaces are contracts in you code with which you can enforce certain behaviors, certain functionalities
     -> checkout "interfaces" dir for example
     -> snippet: type logger interface {
                     log()
                     printMessage(message string) int
+                }
+                func createLog(data logger) {
+                    // do more stuff
+                    data.log()
                 }
     -> interfaces are there to only define methods
     -> you can't add fields in there
@@ -534,13 +540,13 @@ control structures
 
 53. Type Assertion
     -> it is used to check if a value is of a certain dataType
-    -> for ex if we use empty interface, we are not sure what kind of dataType we will recieve
+    -> for ex if we use empty interface, we are not sure what kind of dataType we will receive
     -> but using type assertion we can check data type at run time.
     -> snippet: func outputValue(value interface{}) {
                     val, ok := value.(string)
                     fmt.Println(val, ok)
                 }
-    -> To get the type of a value: valType := value.(type)
+    -> To get the type of a value: valType := value.(type), can be used only with switch
 
 54. Type switches
     -> A type switch is a construct that permits several type assertions in series.
@@ -632,7 +638,7 @@ control structures
 
 58. channels
     -> channel is feature built-in to go that helps us with communication and data-management
-    -> when working with concurrent code and therefore when working with go routines
+    -> when working with concurrent code and therefore when working with goroutines
     -> snippet: channel := make(chan int)
                 channel <- 1
     -> with the 'chan' keyword we tell 'make' and therefore go to create a channel
