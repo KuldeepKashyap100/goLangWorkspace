@@ -239,7 +239,7 @@
 	        highlightedPrices := featuredPrices[:1]
 	        fmt.Println(len(highlightedPrices), cap(highlightedPrices)) -> 1 3
             highlightedPrices = highlightedPrices[:3]
-            fmt.Println(highlightedPrices, len(highlightedPrices), cap(highlightedPrices)) -> [199.99 3.99 4] 3 3
+            fmt.Println(highlightedPrices, len(highlightedPrices), cap(highlightedPrices)) -> [2.99 3.99 4.0] 3 3
     -> highlightedPrices are based on featuredPrices which in turn based on the prices
     -> so they share the same array under the hood 
     -> highlightedPrices only have one element because it starts at idx 1 and ends at idx 1
@@ -495,7 +495,7 @@ control structures
     -> Go does not have try/catch or throw to handle error
     -> instead Go uses multiple return value approach to return err along with value
     -> ex: file, err := os.Create("data.txt")
-    -> but sometimes errors are so severe that we don't to continue further execution
+    -> but sometimes errors are so severe that we don't want to continue further execution
     -> in the above example if the file is not created we don't want to do anything 
     -> of course we can try recreating the file or log and return from the function
     -> but you can also use special function that is built-in Go "panic" function
